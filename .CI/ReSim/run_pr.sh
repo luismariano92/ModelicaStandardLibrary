@@ -7,7 +7,7 @@ tools=$4
 
 for tool in $tools
 do 
-  uppertool=$tool | tr 'a-z' 'A-Z'
+  uppertool=$( echo $tool | tr 'a-z' 'A-Z')
   docker run --rm --name $tool\_pr_compare_$event_number\_$pkg_name --volume shared_data:/shared_data  $tool\_image python /shared_data/run_scripts/$uppertool\_PR_compare.py $master_hash $event_number $pkg_name            
 done
 
@@ -30,4 +30,4 @@ mkdir /var/www/html/prs/$event_number/$pkg_name
 # copy data to webserver directory
 docker cp create_overview_$event_number\_$pkg_name:/shared_data/resim_output/PRs/PR_$event_number/$pkg_name/report  /var/www/html/prs/$event_number/$pkg_name
 docker rm create_overview_$event_number\_$pkg_name
-exit $(head -n 1 /var/www/html/prs/$event_number/$pkg_name/status.txt)  
+exit $(head -n 1 /var/www/html/prs/$event_number/$pkg_name/report/status.txt)  
