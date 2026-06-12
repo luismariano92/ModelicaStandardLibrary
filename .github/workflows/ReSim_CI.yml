@@ -13,11 +13,11 @@ jobs:
   run:
     runs-on: ubuntu-latest
 
-  container:
-    image: ghcr.io/matthiasbschaefer/om_image:latest
-    credentials:
-      username: ${{ secrets.GHCR_USER }}
-      password: ${{ secrets.GHCR_TOKEN }}
+    container:
+      image: ghcr.io/matthiasbschaefer/om_image:latest
+      credentials:
+        username: ${{ secrets.GHCR_USER }}
+        password: ${{ secrets.GHCR_TOKEN }}
 
     steps:
       - uses: actions/checkout@v6
