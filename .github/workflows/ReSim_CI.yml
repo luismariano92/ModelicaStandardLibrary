@@ -1,43 +1,34 @@
-name: CI ReSim
+name: ReSim CI
 
 on:
-  pull_request_target:
   workflow_dispatch:
+  pull_request_target:
+
 
 env:
-    PR_SERVER: ${{ vars.LTX_PR_SERVER }}
-    TESTING_TOOLS: ${{ vars.LTX_TESTING_TOOLS }}
     EVENT_NUMBER:  ${{ github.event.number }}
     PR_SHA: ${{ github.event.pull_request.base.sha }}
-
+    WORKSPACE: ${{ github.workspace }}
 jobs:
-  prepare:
-    runs-on: [ self-hosted, Linux, regression_testing ]      
-    steps: 
-      - uses: actions/checkout@v6
-        with: 
-            sparse-checkout: './.CI/ReSim'
+  run:
+    runs-on: ubuntu-latest
 
-      - name: Checkout code in docker
-        run: ./.CI/ReSim/prepare_pr.sh ${{ env.EVENT_NUMBER }}
-    
-  testrun_modelica:
-    needs: prepare
-    runs-on: [ self-hosted, Linux, regression_testing ]
-    environment: 
-        name: Report modelica
-        url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/Modelica/report/PR_comparison_report.html
+  container:
+    image: ghcr.io/matthiasbschaefer/om_image:latest
+    credentials:
+      username: ${{ secrets.GHCR_USER }}
+      password: ${{ secrets.GHCR_TOKEN }}
+
     steps:
-      - name: Run tests modelica      
-        run: ./.CI/ReSim/run_pr.sh ${{ env.EVENT_NUMBER }} ${{ env.PR_SHA }} Modelica ${{ env.TESTING_TOOLS }}
+      - uses: actions/checkout@v6
 
-            
-  testrun_modelicatest:
-    needs: prepare
-    runs-on: [ self-hosted, Linux, regression_testing ]
-    environment: 
-        name: Report modelicatest
-        url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/ModelicaTest/report/PR_comparison_report.html
-    steps:    
-      - name: Run tests modelicatest      
-        run:  ./.CI/ReSim/run_pr.sh ${{ env.EVENT_NUMBER }} ${{ env.PR_SHA }} ModelicaTest ${{ env.TESTING_TOOLS }}
+      - name: Run script
+        run: python /work/run_script/OM_pr_compare_local.py $ {{ env.PR_SHA }} ${{ env.EVENT_NUMBER }} Modelica ${{ env.WORKSPACE }}
+
+
+
+
+
+
+
+
