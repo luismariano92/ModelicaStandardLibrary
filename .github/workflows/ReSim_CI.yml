@@ -25,12 +25,4 @@ jobs:
         with: 
             persist-credentials: false
       - name: Run script
-        run: python /work/run_script/OM_pr_compare_local.py $ {{ env.PR_SHA }} ${{ env.EVENT_NUMBER }} Modelica ${{ env.WORKSPACE }}
-
-
-
-
-
-
-
-
+        run: python /work/run_scripts/OM_PR_compare_local.py ${{ env.PR_SHA }} ${{ env.EVENT_NUMBER }} Modelica ${{ env.WORKSPACE }}
