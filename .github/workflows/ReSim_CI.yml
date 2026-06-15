@@ -24,13 +24,6 @@ jobs:
       - uses: actions/checkout@v6
         with: 
             persist-credentials: false
-      - name: Write SSH keys
-        run: |
-            install -m 600 -D /dev/null ~/.ssh/id_rsa
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/resimuser/.ssh/id_rsa
-            host='212.227.63.234'
-            hosts="$(dig +short "$host" | grep -v '\.$' | sed -z 's|\n|,|g')$host"
-            ssh-keyscan -H "$hosts" > /home/resimuser/.ssh/known_hosts
       
       - name: Run script
         run: python /work/run_scripts/OM_PR_compare_local.py ${{ env.PR_SHA }} ${{ env.EVENT_NUMBER }} Modelica ${{ env.WORKSPACE }}
