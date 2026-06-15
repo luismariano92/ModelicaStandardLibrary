@@ -15,7 +15,10 @@ jobs:
 
     container:
       image: ghcr.io/matthiasbschaefer/om_image:latest
-      options: --user root
+      options: |
+        --user root
+        --network=host
+        --rm
       credentials:
         username: ${{ secrets.GHCR_USER }}
         password: ${{ secrets.GHCR_TOKEN }}
@@ -24,7 +27,13 @@ jobs:
       - uses: actions/checkout@v6
         with: 
             persist-credentials: false
+      - name: Write SSH keys
+        run: |
+            install -m 600 -D /dev/null ~/.ssh/id_rsa
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            host='212.227.63.234'
+            hosts="$(dig +short "$host" | grep -v '\.$' | sed -z 's|\n|,|g')$host"
+            ssh-keyscan -H "$hosts" > ~/.ssh/known_hosts
+      
       - name: Run script
         run: python /work/run_scripts/OM_PR_compare_local.py ${{ env.PR_SHA }} ${{ env.EVENT_NUMBER }} Modelica ${{ env.WORKSPACE }}
-      - name: Copy back
-        run: scp -r /work/resim_output/PRs/PR_${{ env.EVENT_NUMBER }}_/Modelica resimuser@212.227.63.234:/home/resimuser/regression_testing/docker/work/reports/PR_${{ env.EVENT_NUMBER }}_/Modelica
