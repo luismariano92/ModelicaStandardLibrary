@@ -16,8 +16,7 @@ jobs:
     container:
       image: ghcr.io/matthiasbschaefer/om_image:latest
       options: |
-        --user=resimuser
-        --network=host
+        --user=root
         --rm
       credentials:
         username: ${{ secrets.GHCR_USER }}
