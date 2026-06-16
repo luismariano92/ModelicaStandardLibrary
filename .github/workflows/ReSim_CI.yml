@@ -8,7 +8,8 @@ on:
 env:
     EVENT_NUMBER:  ${{ github.event.number }}
     PR_SHA: ${{ github.event.pull_request.base.sha }}
-    WORKSPACE: ${{ github.workspace }}
+    # WORKSPACE: ${{ github.workspace }}
+    WORKSPACE: $GITHUB_WORKSPACE
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -26,4 +27,4 @@ jobs:
             persist-credentials: false
       
       - name: Run script
-        run: python /work/run_scripts/OM_PR_compare_local.py ${{ env.PR_SHA }} ${{ env.EVENT_NUMBER }} Modelica ${{ env.WORKSPACE }}
+        run: /work/run_scripts/run_tool.sh ${{ env.WORKSPACE }} ${{ env.EVENT_NUMBER }} ${{ env.PR_SHA }} "om"
