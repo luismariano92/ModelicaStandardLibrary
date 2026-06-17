@@ -25,6 +25,7 @@ jobs:
       - uses: actions/checkout@v6
         with: 
             persist-credentials: false
+            fetch-depth: 0
       
       - name: prepare
         run: /work/run_scripts/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.PR_SHA }} om
