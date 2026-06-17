@@ -26,5 +26,8 @@ jobs:
         with: 
             persist-credentials: false
       
-      - name: Run script
+      - name: prepare
+        run: /work/run_scripts/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.PR_SHA }} om
+        
+      - name: run
         run: /work/run_scripts/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.PR_SHA }} om
