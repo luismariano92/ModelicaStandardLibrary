@@ -7,7 +7,8 @@ on:
 
 env:
     EVENT_NUMBER:  ${{ github.event.number }}
-    PR_SHA: ${{ github.event.pull_request.base.sha }}
+    BASE_SHA: ${{ github.event.pull_request.base.sha }}
+    PR_SHA: ${{ github.event.pull_request.head.sha }}
     WORKSPACE: ${{ github.workspace }}
     # WORKSPACE: $GITHUB_WORKSPACE
 jobs:
@@ -28,7 +29,7 @@ jobs:
             fetch-depth: 0
       
       - name: prepare
-        run: /work/run_scripts/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.PR_SHA }} om
+        run: /work/run_scripts/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} ${{ env.PR_SHA }} om
         
       - name: run
-        run: /work/run_scripts/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.PR_SHA }} om
+        run: /work/run_scripts/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} om
