@@ -12,7 +12,29 @@ env:
     WORKSPACE: ${{ github.workspace }}
     # WORKSPACE: $GITHUB_WORKSPACE
 jobs:
-  run:
+  run_dymola:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/matthiasbschaefer/dymola_image:latest
+      options: --user=resimuser --rm
+      credentials:
+        username: ${{ secrets.GHCR_USER }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with: 
+            persist-credentials: false
+            fetch-depth: 0
+      
+      - name: prepare
+        run: /work/run_scripts/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} ${{ env.PR_SHA }} dymola
+        
+      - name: run
+        run: /work/run_scripts/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} dymola
+  
+  run_openmodelica:
     runs-on: ubuntu-latest
 
     container:
@@ -33,3 +55,7 @@ jobs:
         
       - name: run
         run: /work/run_scripts/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} om
+
+      - name: create_overview
+        run: /work/run_scripts/create_overview.sh ${{ env.EVENT_NUMBER }}
+    
