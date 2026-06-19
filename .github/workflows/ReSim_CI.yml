@@ -82,12 +82,16 @@ jobs:
       credentials:
         username: ${{ secrets.GHCR_USER }}
         password: ${{ secrets.GHCR_TOKEN }}    
+    
+    environment: 
+        name: modelica_report
+        url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/Modelica/report/PR_comparison_report.html
+    
     steps:  
       - name: publish_modelica
         run: /work/run_scripts/publish_reports.sh ${{ env.EVENT_NUMBER }} Modelica
-        environment: 
-            name: modelica_report
-            url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/Modelica/report/PR_comparison_report.html
+
+  
   
   publish_modelicatest:
     runs-on: ubuntu-latest
@@ -98,9 +102,9 @@ jobs:
       credentials:
         username: ${{ secrets.GHCR_USER }}
         password: ${{ secrets.GHCR_TOKEN }}    
-        environment: 
-            name: modelica_report
-            url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/ModelicaTest/report/PR_comparison_report.html  
+    environment: 
+        name: modelica_report
+        url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/ModelicaTest/report/PR_comparison_report.html  
     
     steps:        
       - name: publish_modelicatest
