@@ -11,7 +11,6 @@ env:
     PR_SHA: ${{ github.event.pull_request.head.sha }}
     WORKSPACE: ${{ github.workspace }}
     PR_SERVER: ${{ vars.LTX_PR_SERVER }}
-    SCRIPT_DIR: ${{ vars.LTX_SCRIPT_DIR }}
     # WORKSPACE: $GITHUB_WORKSPACE
 jobs:
   run_dymola:
@@ -31,10 +30,10 @@ jobs:
             fetch-depth: 0
       
       - name: prepare
-        run: ${{ env.SCRIPT_DIR }}/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} ${{ env.PR_SHA }} dymola
+        run: /work/run_scripts/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} ${{ env.PR_SHA }} dymola
         
       - name: run
-        run: ${{ env.SCRIPT_DIR }}/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} dymola
+        run: /work/run_scripts/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} dymola
   
   run_openmodelica:
     runs-on: ubuntu-latest
@@ -53,10 +52,10 @@ jobs:
             fetch-depth: 0
       
       - name: prepare
-        run: ${{ env.SCRIPT_DIR }}/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} ${{ env.PR_SHA }} om
+        run: /work/run_scripts/prepare_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} ${{ env.PR_SHA }} om
         
       - name: run
-        run: ${{ env.SCRIPT_DIR }}/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} om
+        run: /work/run_scripts/run_tool.sh $GITHUB_WORKSPACE ${{ env.EVENT_NUMBER }} ${{ env.BASE_SHA }} om
 
   overview:
     runs-on: ubuntu-latest
@@ -72,7 +71,7 @@ jobs:
     
     steps:
       - name: create_overview
-        run: ${{ env.SCRIPT_DIR }}/create_overview.sh ${{ env.EVENT_NUMBER }}
+        run: /work/run_scripts/create_overview.sh ${{ env.EVENT_NUMBER }}
     
   publish_modelica:
     runs-on: ubuntu-latest
@@ -83,14 +82,12 @@ jobs:
       credentials:
         username: ${{ secrets.GHCR_USER }}
         password: ${{ secrets.GHCR_TOKEN }}    
-    environment: 
-        name: modelica_report
-        url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/Modelica/report/PR_comparison_report.html url: ${{ vars.LTX_PR_SERVER }}
-
     steps:  
       - name: publish_modelica
-        run: ${{ env.SCRIPT_DIR }}/publish_reports.sh ${{ env.EVENT_NUMBER }} Modelica
-
+        run: /work/run_scripts/publish_reports.sh ${{ env.EVENT_NUMBER }} Modelica
+        environment: 
+            name: modelica_report
+            url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/Modelica/report/PR_comparison_report.html
   
   publish_modelicatest:
     runs-on: ubuntu-latest
@@ -101,10 +98,10 @@ jobs:
       credentials:
         username: ${{ secrets.GHCR_USER }}
         password: ${{ secrets.GHCR_TOKEN }}    
-    environment: 
-        name: modelica_report
-        url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/ModelicaTest/report/PR_comparison_report.html url: ${{ vars.LTX_PR_SERVER }}    
+        environment: 
+            name: modelica_report
+            url: ${{ env.PR_SERVER }}/${{ env.EVENT_NUMBER }}/ModelicaTest/report/PR_comparison_report.html  
     
     steps:        
       - name: publish_modelicatest
-        run: ${{ env.SCRIPT_DIR }}/publish_reports.sh ${{ env.EVENT_NUMBER }} ModelicaTest
+        run: /work/run_scripts/publish_reports.sh ${{ env.EVENT_NUMBER }} ModelicaTest
