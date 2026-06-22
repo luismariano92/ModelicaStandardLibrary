@@ -76,6 +76,7 @@ jobs:
   publish_modelica:
     runs-on: ubuntu-latest
     needs: [overview]
+    if: always()
     container:
       image: ghcr.io/matthiasbschaefer/om_image:latest
       options: --user=resimuser --rm
@@ -96,6 +97,7 @@ jobs:
   publish_modelicatest:
     runs-on: ubuntu-latest
     needs: [overview]
+    if: always()
     container:
       image: ghcr.io/matthiasbschaefer/om_image:latest
       options: --user=resimuser --rm
