@@ -5,7 +5,7 @@ package Continuous "Library of continuous control blocks with internal states"
 
   extends Modelica.Icons.Package;
 
-  block Integrator "Output the integral of the input signal with optional reset"
+  block Integrator "Output the integral of the input signal with optional reset Mariano w/h"
     import Modelica.Blocks.Types.Init;
     parameter Real k=1 "Integrator gain";
     parameter Boolean use_reset = false "= true, if reset port enabled"
